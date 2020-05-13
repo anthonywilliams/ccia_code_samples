@@ -30,13 +30,13 @@ std::condition_variable data_cond;
 
 void data_preparation_thread()
 {
-    while(more_data_to_prepare())
+    do
     {
         data_chunk const data=prepare_data();
         std::lock_guard<std::mutex> lk(mut);
         data_queue.push(data);
         data_cond.notify_one();
-    }
+    } while(more_data_to_prepare());
 }
 
 void data_processing_thread()
