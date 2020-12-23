@@ -3,7 +3,6 @@
 #include <memory>
 #include <functional>
 #include <iostream>
-#include <iostream>
 
 class function_wrapper
 {
