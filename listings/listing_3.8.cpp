@@ -4,49 +4,61 @@
 class hierarchical_mutex
 {
     std::mutex internal_mutex;
-    unsigned long const hierarchy_value;
-    unsigned long previous_hierarchy_value;
-    static thread_local unsigned long this_thread_hierarchy_value;
+    unsigned long const instance_level;
+    unsigned long previous_level;
+    static thread_local unsigned long thread_level;
 
-    void check_for_hierarchy_violation()
+    void check_lock_order()
     {
-        if(this_thread_hierarchy_value <= hierarchy_value)
+        if(thread_level <= instance_level)
         {
-            throw std::logic_error("mutex hierarchy violated");
+            throw std::logic_error("mutex lock order violated");
         }
     }
-    void update_hierarchy_value()
+    void update_levels_on_lock()
     {
-        previous_hierarchy_value=this_thread_hierarchy_value;
-        this_thread_hierarchy_value=hierarchy_value;
+        previous_level=thread_level;
+        thread_level=instance_level;
+    }
+    void check_unlock_order()
+    {
+        if(thread_level != instance_level)
+        {
+            throw std::logic_error("mutex unlock order violated");
+        }
+    }
+    void update_levels_on_unlock()
+    {
+        thread_level=previous_level;
     }
 public:
     explicit hierarchical_mutex(unsigned long value):
-        hierarchy_value(value),
-        previous_hierarchy_value(0)
+        instance_level(value),
+        previous_level(0)
     {}
     void lock()
     {
-        check_for_hierarchy_violation();
+        check_lock_order();
         internal_mutex.lock();
-        update_hierarchy_value();
+        update_levels_on_lock();
     }
     void unlock()
     {
-        this_thread_hierarchy_value=previous_hierarchy_value;
+        check_unlock_order();
+        update_levels_on_unlock();
         internal_mutex.unlock();
     }
     bool try_lock()
     {
-        check_for_hierarchy_violation();
+        check_lock_order();
         if(!internal_mutex.try_lock())
             return false;
-        update_hierarchy_value();
+        update_levels_on_lock();
         return true;
     }
 };
 thread_local unsigned long
-    hierarchical_mutex::this_thread_hierarchy_value(ULONG_MAX);       
+    hierarchical_mutex::thread_level(ULONG_MAX);       
 
 int main()
 {
