@@ -1,13 +1,15 @@
 #include <future>
-template<typename F,typename A>
-std::future<std::result_of<F(A&&)>::type>
-spawn_task(F&& f,A&& a)
-{
-    typedef std::result_of<F(A&&)>::type result_type;
-    std::packaged_task<result_type(A&&)>
-        task(std::move(f));
-    std::future<result_type> res(task.get_future());
-    std::thread t(std::move(task),std::move(a));
-    t.detach();
-    return res;
+
+template <typename Func, typename ...Args>
+std::future<std::invoke_result_t<Func&&, Args&&...>> spawn_task(Func &&f, Args &&...rest) {
+    typedef std::invoke_result_t<Func&&, Args&&...> result_type;
+    
+    std::packaged_task<result_type(Args&&...)> task(std::move(f));
+    
+    std::future<result_type> result(task.get_future());
+    
+    std::thread worker(std::move(task), std::move(rest)...);
+    worker.detach();
+    
+    return result;
 }
