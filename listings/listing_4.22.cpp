@@ -1,5 +1,5 @@
 #include <future>
-std::future<FinalResult> process_data(std::vector<MyData>& vec)
+std::future<FinalResult> process_data(const std::vector<MyData>& vec)
 {
     size_t const chunk_size=whatever;
     size_t remaining_size, this_chunk_size;
