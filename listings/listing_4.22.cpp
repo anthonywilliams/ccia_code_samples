@@ -10,7 +10,7 @@ std::future<FinalResult> process_data(std::vector<MyData>& vec)
             std::async(process_chunk,begin,begin+this_chunk_size));
         begin+=this_chunk_size;
     }
-    return std::async([all_results=std::move(results)](){
+    return std::async([all_results=std::move(results)] () mutable {
         std::vector<ChunkResult> v;
         v.reserve(all_results.size());
         for(auto& f: all_results)
