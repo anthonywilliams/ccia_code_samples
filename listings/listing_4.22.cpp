@@ -7,8 +7,9 @@ std::future<FinalResult> process_data(const std::vector<MyData>& vec)
     for(auto it=vec.begin(),end=vec.end();it!=end;){
         remaining_size=end-it;
         this_chunk_size=std::min(remaining_size,chunk_size);
-        results.push_back(
-            std::async(process_chunk,it,it+this_chunk_size));
+        results.push_back(std::async([=] () {
+            return process_chunk_template(it,it+this_chunk_size);
+        }));
         it+=this_chunk_size;
     }
     return std::async([all_results=std::move(results)] () mutable {
