@@ -17,7 +17,7 @@ std::experimental::future<FinalResult> process_data(
              std::experimental::future<ChunkResult>>> ready_results)
         {
             std::vector<std::experimental::future<ChunkResult>>
-                all_results=ready_results .get();
+                all_results=ready_results.get();
             std::vector<ChunkResult> v;
             v.reserve(all_results.size());
             for(auto& f: all_results)
