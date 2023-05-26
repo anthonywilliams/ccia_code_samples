@@ -20,7 +20,7 @@ private:
         bucket_data data;
         mutable std::shared_mutex mutex;
 
-        bucket_iterator find_entry_for(Key const& key) const
+        bucket_iterator find_entry_for(Key const& key)
         {
             return std::find_if(data.begin(),data.end(),
                 [&](bucket_value const& item)
