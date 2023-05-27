@@ -20,14 +20,14 @@ private:
         bucket_data data;
         mutable std::shared_mutex mutex;
 
-        bucket_iterator find_entry_for(Key const& key) const
+        bucket_iterator find_entry_for(Key const& key)
         {
             return std::find_if(data.begin(),data.end(),
                 [&](bucket_value const& item)
                 {return item.first==key;});
         }
     public:
-        Value value_for(Key const& key,Value const& default_value) const
+        Value value_for(Key const& key,Value const& default_value)
         {
             std::shared_lock<std::shared_mutex> lock(mutex);
             bucket_iterator const found_entry=find_entry_for(key);
