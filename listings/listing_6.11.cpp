@@ -27,7 +27,7 @@ private:
                 {return item.first==key;});
         }
     public:
-        Value value_for(Key const& key,Value const& default_value) const
+        Value value_for(Key const& key,Value const& default_value)
         {
             std::shared_lock<std::shared_mutex> lock(mutex);
             bucket_iterator const found_entry=find_entry_for(key);
