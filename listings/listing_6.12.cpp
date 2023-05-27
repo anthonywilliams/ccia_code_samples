@@ -17,7 +17,7 @@ std::map<Key,Value> threadsafe_lookup_table::get_map() const
     std::map<Key,Value> res;
     for(unsigned i=0;i<buckets.size();++i)
     {
-        for(bucket_iterator it=buckets[i].data.begin();
+        for(auto it=buckets[i].data.begin();
             it!=buckets[i].data.end();
             ++it)
         {
