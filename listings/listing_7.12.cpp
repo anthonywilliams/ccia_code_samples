@@ -31,7 +31,7 @@ public:
         {
             increase_head_count(old_head);
             node* const ptr=old_head.ptr;
-            if(!ptr)
+            if(!ptr->next.ptr)
             {
                 return std::shared_ptr<T>();
             }
