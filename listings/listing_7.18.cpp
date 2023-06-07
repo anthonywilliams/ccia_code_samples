@@ -36,7 +36,7 @@ private:    struct node;
             }
             while(!count.compare_exchange_strong(
                       old_counter,new_counter,
-                      std::memory_order_acquire,std::memory_order_relaxed));
+                      std::memory_order_acq_rel,std::memory_order_relaxed));
             if(!new_counter.internal_count &&
                !new_counter.external_counters)
             {
