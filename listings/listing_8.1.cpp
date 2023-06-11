@@ -32,7 +32,7 @@ struct sorter
 
     void try_sort_chunk()
     {
-        boost::shared_ptr<chunk_to_sort > chunk=chunks.pop();
+        std::shared_ptr<chunk_to_sort > chunk=chunks.pop();
         if(chunk)
         {
             sort_chunk(chunk);
@@ -79,7 +79,7 @@ struct sorter
         return result;
     }
 
-    void sort_chunk(boost::shared_ptr<chunk_to_sort > const& chunk)
+    void sort_chunk(std::shared_ptr<chunk_to_sort > const& chunk)
     {
         chunk->promise.set_value(do_sort(chunk->data));
     }
