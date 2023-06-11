@@ -11,7 +11,7 @@ struct sorter
         std::promise<std::list<T> > promise;
     };
 
-    thread_safe_stack<chunk_to_sort> chunks;
+    threadsafe_stack<chunk_to_sort> chunks;
     std::vector<std::thread> threads;
     unsigned const max_thread_count;
     std::atomic<bool> end_of_data;
