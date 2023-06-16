@@ -2,6 +2,8 @@
 #include <thread>
 #include <vector>
 #include <future>
+#include <numeric>
+#include <functional>
 template<typename Iterator,typename T>
 struct accumulate_block
 {
