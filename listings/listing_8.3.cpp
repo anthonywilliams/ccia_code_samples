@@ -42,7 +42,7 @@ T parallel_accumulate(Iterator first,Iterator last,T init)
         Iterator block_end=block_start;
         std::advance(block_end,block_size);
         std::packaged_task<T(Iterator,Iterator)> task(
-            accumulate_block<Iterator,T>());
+            (accumulate_block<Iterator,T>()));
         futures[i]=task.get_future();
         threads[i]=std::thread(std::move(task),block_start,block_end);
         block_start=block_end;
