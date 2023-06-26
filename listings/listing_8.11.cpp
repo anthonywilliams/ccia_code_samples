@@ -24,7 +24,7 @@ void parallel_partial_sum(Iterator first,Iterator last)
                 std::partial_sum(begin,end,begin);
                 if(previous_end_value)
                 {
-                    value_type& addend=previous_end_value->get();
+                    value_type const& addend=previous_end_value->get();
                     *last+=addend;
                     if(end_value)
                     {
