@@ -57,7 +57,7 @@ void parallel_partial_sum(Iterator first,Iterator last)
     unsigned long const length=std::distance(first,last);
 
     if(!length)
-        return last;
+        return;
 
     unsigned long const min_per_thread=25;
     unsigned long const max_threads=
