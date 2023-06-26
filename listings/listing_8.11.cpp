@@ -1,10 +1,20 @@
 #include <future>
 #include <algorithm>
 #include <vector>
-struct join_threads
-{
-    join_threads(std::vector<std::thread>&)
-    {}
+
+class join_threads {
+public:
+    join_threads(std::vector<std::thread> &threads) : threads_(threads) { }
+
+    ~join_threads()
+    {
+        for (auto &t : threads_) {
+            if (t.joinable()) { t.join(); }
+        }
+    }
+
+private:
+    std::vector<std::thread> &threads_;
 };
 
 template<typename Iterator>
