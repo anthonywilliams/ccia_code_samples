@@ -1,10 +1,20 @@
 #include <future>
 #include <algorithm>
 #include <vector>
-struct join_threads
-{
-    join_threads(std::vector<std::thread>&)
-    {}
+
+class join_threads {
+public:
+    join_threads(std::vector<std::thread> &threads) : threads_(threads) { }
+
+    ~join_threads()
+    {
+        for (auto &t : threads_) {
+            if (t.joinable()) { t.join(); }
+        }
+    }
+
+private:
+    std::vector<std::thread> &threads_;
 };
 
 template<typename Iterator>
@@ -24,7 +34,7 @@ void parallel_partial_sum(Iterator first,Iterator last)
                 std::partial_sum(begin,end,begin);
                 if(previous_end_value)
                 {
-                    value_type& addend=previous_end_value->get();
+                    value_type const& addend=previous_end_value->get();
                     *last+=addend;
                     if(end_value)
                     {
@@ -57,7 +67,7 @@ void parallel_partial_sum(Iterator first,Iterator last)
     unsigned long const length=std::distance(first,last);
 
     if(!length)
-        return last;
+        return;
 
     unsigned long const min_per_thread=25;
     unsigned long const max_threads=
