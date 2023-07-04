@@ -81,6 +81,10 @@ void parallel_partial_sum(Iterator first,Iterator last)
             {
                 ith_element=buffer[i];
             }
+            else
+            {
+                buffer[i] = ith_element;
+            }
             b.done_waiting();
         }
     };
