@@ -2,10 +2,17 @@
 #include <thread>
 #include <vector>
 
-struct join_threads
-{
-    join_threads(std::vector<std::thread>&)
-    {}
+class join_threads {
+public:
+    explicit join_threads(std::vector<std::thread> &threads) : threads_(threads) { }
+    
+    ~join_threads()
+    {
+        for (auto &t : threads_)
+            if (t.joinable()) { t.join(); }
+    }
+private:
+    std::vector<std::thread> &threads_;
 };
     
 
@@ -74,6 +81,10 @@ void parallel_partial_sum(Iterator first,Iterator last)
             {
                 ith_element=buffer[i];
             }
+            else
+            {
+                buffer[i] = ith_element;
+            }
             b.done_waiting();
         }
     };
@@ -88,7 +99,6 @@ void parallel_partial_sum(Iterator first,Iterator last)
     std::vector<std::thread> threads(length-1);
     join_threads joiner(threads);
 
-    Iterator block_start=first;
     for(unsigned long i=0;i<(length-1);++i)
     {
         threads[i]=std::thread(process_element(),first,last,
