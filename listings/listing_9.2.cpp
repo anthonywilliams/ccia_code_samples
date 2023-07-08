@@ -21,17 +21,17 @@ class function_wrapper
     };
 public:
     template<typename F>
-    function_wrapper(F&& f):
-        impl(new impl_type<F>(std::move(f)))
+    function_wrapper(F&& f) noexcept:
+        impl(std::make_unique<impl_type<F>>(std::move(f)))
     {}
 
     void call() { impl->call(); }
 
-    function_wrapper(function_wrapper&& other):
+    function_wrapper(function_wrapper&& other) noexcept:
         impl(std::move(other.impl))
     {}
 
-    function_wrapper& operator=(function_wrapper&& other)
+    function_wrapper& operator=(function_wrapper&& other) noexcept
     {
         impl=std::move(other.impl);
         return *this;
@@ -48,10 +48,10 @@ public:
     std::deque<function_wrapper> work_queue;
 
     template<typename FunctionType>
-    std::future<typename std::result_of<FunctionType()>::type>
+    std::future<std::invoke_result_t<FunctionType&&>>
     submit(FunctionType f)
     {
-        typedef typename std::result_of<FunctionType()>::type result_type;
+        typedef std::invoke_result_t<FunctionType&&> result_type;
         
         std::packaged_task<result_type()> task(std::move(f));
         std::future<result_type> res(task.get_future());
