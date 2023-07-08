@@ -21,17 +21,17 @@ class function_wrapper
     };
 public:
     template<typename F>
-    function_wrapper(F&& f):
+    function_wrapper(F&& f) noexcept:
         impl(std::make_unique<impl_type<F>>(std::move(f)))
     {}
 
     void call() { impl->call(); }
 
-    function_wrapper(function_wrapper&& other):
+    function_wrapper(function_wrapper&& other) noexcept:
         impl(std::move(other.impl))
     {}
 
-    function_wrapper& operator=(function_wrapper&& other)
+    function_wrapper& operator=(function_wrapper&& other) noexcept
     {
         impl=std::move(other.impl);
         return *this;
