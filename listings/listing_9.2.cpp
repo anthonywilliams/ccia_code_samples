@@ -48,10 +48,10 @@ public:
     std::deque<function_wrapper> work_queue;
 
     template<typename FunctionType>
-    std::future<typename std::result_of<FunctionType()>::type>
+    std::future<std::invoke_result_t<FunctionType&&>>
     submit(FunctionType f)
     {
-        typedef typename std::result_of<FunctionType()>::type result_type;
+        typedef std::invoke_result_t<FunctionType&&> result_type;
         
         std::packaged_task<result_type()> task(std::move(f));
         std::future<result_type> res(task.get_future());
