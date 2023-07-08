@@ -22,7 +22,7 @@ class function_wrapper
 public:
     template<typename F>
     function_wrapper(F&& f):
-        impl(new impl_type<F>(std::move(f)))
+        impl(std::make_unique<impl_type<F>>(std::move(f)))
     {}
 
     void call() { impl->call(); }
