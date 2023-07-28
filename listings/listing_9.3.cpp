@@ -2,6 +2,14 @@
 #include <future>
 #include <thread>
 
+template <typename _ForwardIt, typename _Tp>
+struct accumulate_block {
+    _Tp operator() (_ForwardIt __first, _ForwardIt __last)
+    {
+        return std::accumulate(__first, __last, __Tp{});
+    }
+};
+
 template<typename Iterator,typename T>
 T parallel_accumulate(Iterator first,Iterator last,T init)
 {
