@@ -22,6 +22,8 @@ public:
 void do_something(int& i)
 {
     ++i;
+    if (i % 100000 == 0)
+        printf("%d\n", i);
 }
 
 struct func
@@ -45,7 +47,8 @@ void do_something_in_current_thread()
 void f()
 {
     int some_local_state;
-    scoped_thread t(std::thread(func(some_local_state)));
+    // scoped_thread t(std::thread(func(some_local_state)));
+    scoped_thread t(std::move(std::thread(func(some_local_state))));
         
     do_something_in_current_thread();
 }
